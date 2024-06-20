@@ -15,6 +15,20 @@ def detect_head(person_image_path):
             x1, y1, x2, y2 = box.xyxy[0].numpy()
             return [x1,y1,x2,y2]
         
+def hat1(x1,y1,x2,y2):
+    #this will return an array which contains resize dimensions and position coordinates
+    x_resize = int(1.3*(x2-x1))
+    y_resize = int(1.3*(y2-y1))
+    resize = [x_resize, y_resize]
+
+    x_loc = int(x1/1.3 + (x2-x1)/11)
+    y_loc = int(y1/1.3 - (y2-y1)/3)
+    coordinates = [x_loc, y_loc]
+
+    return [resize, coordinates]
+
+        
+        
 #pass the path of person image here
 person_image_loc = 'test_images/b4.jpg'
 person_image = cv2.imread(person_image_loc)
@@ -28,23 +42,17 @@ y1 = int(loc[1])
 x2 = int(loc[2])
 y2 = int(loc[3])
 
-# x_resize = int(1.6*(x2-x1))
-# y_resize = int(2.3*(y2-y1))
+hat_type = int(input("1->Hat1"))
 
-#THIS IS THE RESIZE FUNCTION WHICH CAN CHANGE AS PER THE TYPE OF HAT
+if(hat_type==1):
+    specs = hat1(x1,y1,x2,y2)
 
-x_resize = int(1.3*(x2-x1))
-y_resize = int(1.3*(y2-y1))
+x_resize = specs[0][0]
+y_resize = specs[0][1]
+x_loc = specs[1][0]
+y_loc = specs[1][1]
 
 resized_acc_image = cv2.resize(acc_image, (x_resize,y_resize))
-
-# x_loc = int(0.72*x1)
-# y_loc = int(-0.6*y1)
-
-#THESE ARE THE STARTING X AND Y COORDINATES OF THE ACCESSORY
-
-x_loc = int(x1/1.3 + (x2-x1)/11)
-y_loc = int(y1/1.3 - (y2-y1)/3)
 
 resultImg = cvzone.overlayPNG(person_image,resized_acc_image, [x_loc,y_loc])
 
